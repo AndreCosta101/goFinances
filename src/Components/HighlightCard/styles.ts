@@ -37,16 +37,15 @@ export const Icon = styled(Feather) <TypeProps>`
 
   ${(props) => props.type === 'up' && css`
     color: ${({ theme }) => theme.colors.success}
-  `}
+  `};
 
   ${(props) => props.type === 'down' && css`
     color: ${({ theme }) => theme.colors.attention}
-  `}
+  `};
 
   ${(props) => props.type === 'total' && css`
     color: ${({ theme }) => theme.colors.shape}
   `}
-
 `;
 
 export const Footer = styled.View``;
