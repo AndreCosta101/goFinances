@@ -9,7 +9,8 @@ import {
   UserGreetings,
   UserName,
   UserWrapper,
-  Icon
+  Icon,
+  HighlightCardsWrapper,
 } from './styles';
 
 export function Dashboard() {
@@ -30,7 +31,11 @@ export function Dashboard() {
         </UserWrapper>
       </Header>
 
-      <HighlightCard />
+      <HighlightCardsWrapper>
+        <HighlightCard />
+        <HighlightCard />
+        <HighlightCard />
+      </HighlightCardsWrapper>
     </Container>
   )
 }
