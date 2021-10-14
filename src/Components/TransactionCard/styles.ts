@@ -3,6 +3,10 @@ import { Feather } from '@expo/vector-icons';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize'
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 
+interface TransactionProps {
+  type: 'positive' | 'negative'
+}
+
 export const Container = styled.View`
   background-color: ${({ theme }) => theme.colors.shape};
   border-radius: 5px;
@@ -16,10 +20,13 @@ export const Title = styled.Text`
   font-size: ${RFValue(14)}px;
 `;
 
-export const Amount = styled.Text`
+export const Amount = styled.Text<TransactionProps>`
     font-family: ${({ theme }) => theme.fonts.regular};
     font-size: ${RFValue(20)}px;
     margin-top: 2px;
+
+    color: ${({ theme, type }) =>
+    type === 'positive' ? theme.colors.success : theme.colors.attention};
 
 `;
 
