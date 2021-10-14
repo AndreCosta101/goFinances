@@ -4,9 +4,11 @@ import {
   Header,
   Title,
   Form,
+  Fields,
 } from './styles';
 
 import { Input } from '../../Components/Form/Input';
+import { Button } from '../../Components/Form/Button';
 
 export function Register() {
   return (
@@ -16,12 +18,15 @@ export function Register() {
       </Header>
 
       <Form>
-        <Input
-          placeholder="Name"
-        />
-        <Input
-          placeholder="Preço"
-        />
+        <Fields>
+          <Input
+            placeholder="Name"
+          />
+          <Input
+            placeholder="Preço"
+          />
+        </Fields>
+        <Button title='Enviar' />
       </Form>
     </Container>
   )
