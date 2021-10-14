@@ -12,6 +12,22 @@ interface ContainerProps {
   type: 'up' | 'down';
 }
 
+
+export const Icon = styled(Feather) <IconProps>`
+  font-size : ${RFValue(24)}px;
+  margin-right: 12px;
+
+  color: ${({ theme, type }) =>
+
+    type === 'up' ? theme.colors.success : theme.colors.attention};
+`;
+
+export const Title = styled.Text`
+  font-family: ${({ theme }) => theme.fonts.regular};
+  font-size: ${RFValue(14)}px;
+
+`;
+
 export const Container = styled(TouchableOpacity) <ContainerProps>`
   width: 48%;
 
@@ -34,19 +50,4 @@ export const Container = styled(TouchableOpacity) <ContainerProps>`
     background-color: ${({ theme }) => theme.colors.attention_light}
   `};
   
-`;
-
-export const Icon = styled(Feather) <IconProps>`
-  font-size : ${RFValue(24)}px;
-  margin-right: 12px;
-
-  color: ${({ theme, type }) =>
-
-    type === 'up' ? theme.colors.success : theme.colors.attention};
-`;
-
-export const Title = styled.Text`
-  font-family: ${({ theme }) => theme.fonts.regular};
-  font-size: ${RFValue(14)}px;
-
 `;
