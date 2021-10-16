@@ -35,13 +35,6 @@ const schema = Yup.object().shape({
   name: Yup.string().required('Nome é obrigatório'),
   amount: Yup
     .string()
-    .transform((_value, originalValue) => {
-      const preNumber = originalValue.replace(/,/g, '')
-      const newNumber = Number(preNumber)
-      const newValue = (newNumber / 100).toFixed(2)
-      console.log(newValue)
-      return (originalValue)
-    })
     .required('O valor é obrigatório')
 
 })
@@ -84,7 +77,7 @@ export function Register() {
     if (category.key === 'category')
       return Alert.alert('Selecione o tipo da transação')
 
-    const data = {
+    const newTransaction = {
       name: form.name,
       amount: form.amount,
       transactionType,
@@ -92,8 +85,12 @@ export function Register() {
     }
 
     try {
+      const data = await AsyncStorage.getItem(dataKey);
+      const currentData = data ? JSON.parse(data) : [];
 
-      await AsyncStorage.setItem(dataKey, JSON.stringify(data));
+      const dataFormatted = [...currentData, newTransaction]
+
+      await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted));
 
 
 
@@ -110,6 +107,7 @@ export function Register() {
     }
 
     loadData()
+
   }, [])
 
   // const string = '1,2,2,2,2'
