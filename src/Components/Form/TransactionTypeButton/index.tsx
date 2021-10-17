@@ -5,7 +5,7 @@ import {
   Container,
   Icon,
   Title,
-  Button,
+  Button
 } from './styles'
 
 const icons = {

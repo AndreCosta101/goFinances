@@ -46,6 +46,7 @@ export const Container = styled.View<ContainerProps>`
 
   padding: 16px ;
 
+
   ${({ isActive, type }) => isActive && type === 'up' && css`
     background-color: ${({ theme }) => theme.colors.success_light}
   `};
