@@ -36,7 +36,7 @@ export const ChartContainer = styled.View`
   align-items: center;
 `;
 
-export const MonthSelect = styled(BorderlessButton)`
+export const MonthSelect = styled.View`
   width: 100%;
 
   flex-direction: row;
@@ -46,7 +46,7 @@ export const MonthSelect = styled(BorderlessButton)`
   margin-top: 24px;
 `;
 
-export const MonthSelectButton = styled.View`
+export const MonthSelectButton = styled(BorderlessButton)`
 
 `;
 

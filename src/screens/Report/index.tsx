@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { addMonths, subMonths, format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { VictoryPie } from 'victory-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
@@ -40,9 +42,19 @@ interface CategoryData {
 }
 
 export function Report() {
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([])
 
   const theme = useTheme();
+
+
+  function handleDateChange(action: 'next' | 'prev') {
+    if (action === 'next') {
+      setSelectedDate(addMonths(selectedDate, 1));
+    } else {
+      setSelectedDate(subMonths(selectedDate, 1));
+    }
+  }
 
   async function loadData() {
     const dataKey = '@gofinances:transactions';
@@ -52,7 +64,12 @@ export function Report() {
     const totalByCategory: CategoryData[] = [];
 
     const expenses = formattedData
-      .filter((expenses: TransactionData) => expenses.type === 'negative')
+      .filter((expenses: TransactionData) =>
+        expenses.type === 'negative' &&
+        new Date(expenses.date).getMonth() === selectedDate.getMonth() &&
+        new Date(expenses.date).getFullYear() === selectedDate.getFullYear()
+
+      )
 
     const totalExpenses = expenses.reduce((acumullator: number, expenses: TransactionData) => {
       return acumullator + Number(expenses.amount);
@@ -95,7 +112,7 @@ export function Report() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [selectedDate]);
 
 
   return (
@@ -113,13 +130,13 @@ export function Report() {
       >
 
         <MonthSelect>
-          <MonthSelectButton>
+          <MonthSelectButton onPress={() => handleDateChange('prev')}>
             <MonthSelectIcon name="chevron-left" />
           </MonthSelectButton>
 
-          <Month>Maio</Month>
+          <Month>{format(selectedDate, 'MMMM, yyyy', { locale: ptBR })}</Month>
 
-          <MonthSelectButton>
+          <MonthSelectButton onPress={() => handleDateChange('next')}>
             <MonthSelectIcon name="chevron-right" />
           </MonthSelectButton>
         </MonthSelect>
