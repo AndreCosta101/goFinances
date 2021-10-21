@@ -22,11 +22,20 @@ import {
 } from './styles';
 
 export function SignIn() {
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, signInWithApple } = useAuth();
 
   async function handleSignInWithGoogle() {
     try {
       signInWithGoogle()
+    } catch (error) {
+      console.log(error)
+      Alert.alert('Algo deu errado')
+    }
+  }
+
+  async function handleSignInWithApple() {
+    try {
+      signInWithApple()
     } catch (error) {
       console.log(error)
       Alert.alert('Algo deu errado')
@@ -65,6 +74,7 @@ export function SignIn() {
           <SocialSignInButton
             title="Entrar com Apple"
             svg={AppleSvg}
+            onPress={handleSignInWithApple}
           />
 
         </FooterWrapper>
