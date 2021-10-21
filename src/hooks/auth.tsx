@@ -30,6 +30,8 @@ interface IAuthContextData {
   user: User;
   signInWithGoogle(): Promise<void>;
   signInWithApple(): Promise<void>;
+  signOut(): Promise<void>;
+  userIsLoading: boolean;
 }
 
 interface AuthorizationResponse {
@@ -41,7 +43,7 @@ interface AuthorizationResponse {
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>({} as User);
-  const [isLoading, setIsLoading] = useState(true);
+  const [userIsLoading, setUserIsLoading] = useState(true);
   const userStorageKey = '@gofinances:user';
 
 
@@ -55,7 +57,6 @@ function AuthProvider({ children }: AuthProviderProps) {
       const { type, params } = await AuthSession
         .startAsync({ authUrl }) as AuthorizationResponse;
 
-      console.log(params)
       if (type === 'success') {
         const response = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${params.access_token}`);
         const userInfo = await response.json();
@@ -78,6 +79,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   async function signInWithApple() {
     try {
+
       const credential = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
@@ -86,11 +88,14 @@ function AuthProvider({ children }: AuthProviderProps) {
       })
 
       if (credential) {
+        const name = credential.fullName!.givenName!;
+        const photo = `https://ui-avatars.com/api/?name=${name}`;
+
         const userLogged = {
           id: String(credential.user),
           email: credential.email!,
-          name: credential.fullName!.givenName!,
-          photo: undefined,
+          name,
+          photo,
         }
         setUser(userLogged)
         await AsyncStorage.setItem(userStorageKey, JSON.stringify(userLogged))
@@ -101,6 +106,11 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function signOut() {
+    setUser({} as User)
+    await AsyncStorage.removeItem(userStorageKey)
+  }
+
   useEffect(() => {
     async function loadUserStoragedData() {
       const userStoraged = await AsyncStorage.getItem(userStorageKey)
@@ -109,7 +119,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         const userLogged = JSON.parse(userStoraged) as User;
         setUser(userLogged)
       }
-      setIsLoading(false)
+      setUserIsLoading(false)
     }
 
     loadUserStoragedData();
@@ -119,7 +129,9 @@ function AuthProvider({ children }: AuthProviderProps) {
     <AuthContext.Provider value={{
       user,
       signInWithGoogle,
-      signInWithApple
+      signInWithApple,
+      signOut,
+      userIsLoading
     }}>
       {children}
     </AuthContext.Provider>

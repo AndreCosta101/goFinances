@@ -1,14 +1,15 @@
-import React, { useContext } from 'react';
-import { Alert } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { ActivityIndicator, Alert } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 import AppleSvg from '../../assets/apple.svg';
 import GoogleSvg from '../../assets/google.svg';
 import LogoSvg from '../../assets/logo.svg';
 
+import { useAuth } from '../../hooks/auth';
+import { useTheme } from 'styled-components';
 
 import { SocialSignInButton } from '../../Components/SocialSIgnInButton';
-import { useAuth } from '../../hooks/auth';
 
 import {
   Container,
@@ -22,24 +23,36 @@ import {
 } from './styles';
 
 export function SignIn() {
+  const [isLoading, setIsLoading] = useState(false);
   const { signInWithGoogle, signInWithApple } = useAuth();
+  const theme = useTheme();
 
   async function handleSignInWithGoogle() {
     try {
-      signInWithGoogle()
+      setIsLoading(true);
+      await signInWithGoogle()
+      setIsLoading(false);
     } catch (error) {
       console.log(error)
       Alert.alert('Algo deu errado')
+      setIsLoading(false);
     }
+
+
   }
 
   async function handleSignInWithApple() {
     try {
-      signInWithApple()
+      setIsLoading(true);
+      await signInWithApple()
+      setIsLoading(false);
     } catch (error) {
       console.log(error)
       Alert.alert('Algo deu errado')
+      setIsLoading(false);
     }
+
+
   }
 
   return (
@@ -78,6 +91,8 @@ export function SignIn() {
           />
 
         </FooterWrapper>
+
+        {isLoading && <ActivityIndicator color={theme.colors.shape} size="large" />}
       </Footer>
     </Container>
   );

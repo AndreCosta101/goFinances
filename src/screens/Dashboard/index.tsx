@@ -29,6 +29,7 @@ import {
 } from './styles';
 import { useFocusEffect } from '@react-navigation/core';
 import theme from '../../global/styles/theme';
+import { useAuth } from '../../hooks/auth';
 
 export interface DataListProps extends TransactionCardProps {
   id: string;
@@ -65,6 +66,8 @@ export function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [transactions, setTransactions] = useState<DataListProps[]>([])
   const [highlightData, setHighLightData] = useState<HighlightData>({} as HighlightData)
+
+  const { signOut, user } = useAuth();
 
   async function loadTransactions() {
     const dataKey = '@gofinances:transactions'
@@ -165,15 +168,15 @@ export function Dashboard() {
               <UserWrapper>
                 <UserInfo>
                   <Photo
-                    source={{ uri: 'https://avatars.githubusercontent.com/u/48858873?v=4' }}
+                    source={{ uri: user.photo }}
                   />
                   <User>
                     <UserGreetings>Olá, </UserGreetings>
-                    <UserName>André</UserName>
+                    <UserName>{user.name}</UserName>
                   </User>
                 </UserInfo>
 
-                <LogoutButton onPress={() => { }}>
+                <LogoutButton onPress={signOut}>
 
                   <Icon name="power" />
 
