@@ -1,7 +1,8 @@
 import React, {
   createContext,
   ReactNode,
-  useContext
+  useContext,
+  useState
 } from 'react';
 
 import * as AuthSession from 'expo-auth-session';
@@ -32,11 +33,8 @@ interface AuthorizationResponse {
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const user = {
-    id: '1232313',
-    name: 'Andre Costa',
-    email: 'andre.costa101@gmail.com'
-  }
+  const [user, setUser] = useState<User>({} as User);
+
 
   async function signInWithGoogle() {
     try {
@@ -49,12 +47,18 @@ function AuthProvider({ children }: AuthProviderProps) {
 
       const { type, params } = await AuthSession
         .startAsync({ authUrl }) as AuthorizationResponse;
-      console.log(type)
+
+      console.log(params)
       if (type === 'success') {
-        const response = await fetch(`https://googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${params.access_token}`);
+        const response = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${params.access_token}`);
         const userInfo = await response.json();
 
-        console.log(userInfo)
+        setUser({
+          id: userInfo.id,
+          email: userInfo.email,
+          name: userInfo.given_name,
+          photo: userInfo.picture
+        })
       }
 
 
