@@ -2,7 +2,8 @@ import React, {
   createContext,
   ReactNode,
   useContext,
-  useState
+  useState,
+  useEffect
 } from 'react';
 
 const { CLIENT_ID } = process.env;
@@ -40,6 +41,8 @@ interface AuthorizationResponse {
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>({} as User);
+  const [isLoading, setIsLoading] = useState(true);
+  const userStorageKey = '@gofinances:user';
 
 
   async function signInWithGoogle() {
@@ -64,7 +67,7 @@ function AuthProvider({ children }: AuthProviderProps) {
           photo: userInfo.picture,
         }
         setUser(userLogged)
-        await AsyncStorage.setItem('@gofinances:user', JSON.stringify(userLogged))
+        await AsyncStorage.setItem(userStorageKey, JSON.stringify(userLogged))
       }
 
 
@@ -90,7 +93,7 @@ function AuthProvider({ children }: AuthProviderProps) {
           photo: undefined,
         }
         setUser(userLogged)
-        await AsyncStorage.setItem('@gofinances:user', JSON.stringify(userLogged))
+        await AsyncStorage.setItem(userStorageKey, JSON.stringify(userLogged))
       }
 
     } catch (error: any) {
@@ -98,6 +101,19 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  useEffect(() => {
+    async function loadUserStoragedData() {
+      const userStoraged = await AsyncStorage.getItem(userStorageKey)
+
+      if (userStoraged) {
+        const userLogged = JSON.parse(userStoraged) as User;
+        setUser(userLogged)
+      }
+      setIsLoading(false)
+    }
+
+    loadUserStoragedData();
+  }, [])
 
   return (
     <AuthContext.Provider value={{
