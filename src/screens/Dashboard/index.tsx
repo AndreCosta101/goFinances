@@ -50,10 +50,17 @@ export interface HighlightData {
 function getLastTransactionDate(
   collection: DataListProps[],
   type: 'positive' | 'negative') {
+
+  // retorna dois arrays separados por tipo positivo e negativo.
+  const filteredCollection = collection
+    .filter(transaction => transaction.type === type);
+
+  if (filteredCollection.length === 0) {
+    return 0
+  }
+
   const lastTransaction = new Date(
-    Math.max.apply(Math, collection
-      // pega as transações de mesmo tipo
-      .filter((transaction) => transaction.type === type)
+    Math.max.apply(Math, filteredCollection
       //separa apenas as datas e transforma elas de string para formato de data.
       .map((transaction) => new Date(transaction.date).getTime()))
   )
@@ -124,14 +131,18 @@ export function Dashboard() {
           style: 'currency',
           currency: 'BRL'
         }),
-        lastTransaction: `Última entrada dia ${lastIncomeTransaction} `,
+        lastTransaction: lastIncomeTransaction === 0
+          ? 'Ainda não há lançamentos'
+          : `Última entrada dia ${lastIncomeTransaction} `,
       },
       expenses: {
         amount: expensesTotal.toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL'
         }),
-        lastTransaction: `Última saída dia ${lastExpenseTransaction} `,
+        lastTransaction: lastExpenseTransaction === 0
+          ? 'Ainda não há lançamentos'
+          : `Última entrada dia ${lastExpenseTransaction} `,
       },
       total: {
         amount: total.toLocaleString('pt-BR', {
