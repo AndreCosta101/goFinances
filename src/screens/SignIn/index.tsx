@@ -31,7 +31,6 @@ export function SignIn() {
     try {
       setIsLoading(true);
       await signInWithGoogle()
-      setIsLoading(false);
     } catch (error) {
       console.log(error)
       Alert.alert('Algo deu errado')
@@ -45,7 +44,6 @@ export function SignIn() {
     try {
       setIsLoading(true);
       await signInWithApple()
-      setIsLoading(false);
     } catch (error) {
       console.log(error)
       Alert.alert('Algo deu errado')
