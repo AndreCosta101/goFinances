@@ -1,5 +1,5 @@
-import React, { Platform, useState } from 'react';
-import { ActivityIndicator, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { ActivityIndicator, Platform, Alert } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 import AppleSvg from '../../assets/apple.svg';
